@@ -1,0 +1,10 @@
+### CIRCUIT BREAKERS ###
+Circuit breakers digunakan untuk membatasi jumlah request ke setiap individual host (pods).
+Contoh yang bisa dibatasi adalah jumlah koneksi concurrent atau berapa banyak request yang gagal.
+Ketika suatu batasan (limit) tercapai, circuit breaker akan menghentikan request selanjutnya.
+Dengan begitu client akan cepat mendapatkan error daripada client mencoba terus menerus hingga service tujuan overload.
+Disini kita akan mendemokan melakukan limitasi request pada dashboard service.
+Untuk dapat mentrigger terjadinya circuit breaker kita dapat menggunakan tools seperti Fortio, Hey, dan Apache bench.
+
+kubectl apply -f 13_Circuit_Breakers/ -R 
+

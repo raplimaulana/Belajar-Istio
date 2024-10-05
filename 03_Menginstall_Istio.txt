@@ -1,0 +1,42 @@
+### MENGISNTALL ISTIO ###
+
+##Istioctl
+Kita dapat menginstall istio di kubernetes cluster dengan menggunakan istioctl atau helm chart.
+Istioctl berfungsi seperti kubectl, hanya saja untuk istio.
+
+curl -L https://istio.io/downloadIstio | sh -
+cd istio-1.23.2
+chmod +x /bin/istioctl
+./bin/istioctl
+export PATH=$PWD/bin:$PATH
+
+##Autentikasi 
+Agar istioctl dapat berkomunikasi dengan kubernetes, tentunya dibutuhkan autentikasi terlebih dahulu.
+Secara default istioctl akan menggunakan file kubeconfig (~/.kube/config) yang digunakan oleh kubectl.
+Dalam artian, jika kubectl sudah bisa terhubung dengan kubernetes, maka istioctl juga bisa.
+Untuk mengecek apakah istioctl sudah dapat terhubung dengan kubernetes, gunakan peritah istioctl version
+
+istioctl version
+
+##Precheck
+Untuk memastikan istio dapat diinstal di cluster kubernetes, kita dapat menggunakan perintah berikut.
+'x' merupakan list perintah experimental.
+
+istioctl x precheck 
+
+##Istio Control-Plane Component
+Setelah kita menginstall istioctl, selanjutnya kita perlu menginstall istio operator di kubernetes.
+Istio memiliki beberapa built-in configuration profile yang dapat kita gunakan saat menginstall istio di kubernetes (https://istio.io/latest/docs/setup/additional-setup/config-profiles/).
+
+Untuk belajar kita akan menggunakan profile demo.
+Setelah proses instalasi sukses, maka akan terbuat namespace baru dengan nama istio-system dengan 3 komponen istio berikut:
+1. Istiod
+   Istio control panel.
+
+2. Ingress-gateway
+   Traffic masuk ke kubernetes dari luar akan masuk melalui gateway ini.
+
+3. Egress-gateway 
+   Traffic keluar dari kubernetes akan melalui gateway ini. 
+
+istioctl install --set profile=demo -y

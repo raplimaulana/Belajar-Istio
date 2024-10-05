@@ -1,0 +1,34 @@
+### PENGENALAN ISTIO ###
+
+##Permasalahan
+Saat ini sudah banyak sekali adopsi aplikasi model microservices. 
+Saat membuat aplikasi, selain bussiness logic tentu saja kita harus memperhatikan hal-hal lain seperti:
+1. Security
+   Enskripsi komunikasi antar microservices, autentikasi dan otorasi end-user.
+
+2. Traffic management
+   Mengatasi ketidakandalan jaringan dengan timeout, retries dan circuit.
+
+3. Observability.
+   Monitoring dari tracing, metrics dan log.
+
+Bayangkan jika hal-hal tersebut harus diimplementasikan di setiap aplikasi kita. 
+Tentu saja development akan jadi sangat lama, bahkan untuk aplikasi yang simple sekalipun.
+
+Adopsi microservices biasanya juga akan mengadopsi kubernetes sebagai container orchestration.
+Saat kita expose aplikasi keluar kubernetes, tentu saja kita expose di port yang sudah ditentukan agar aman. 
+Contohnya saat menggunakan ingress di port 80 dan port 443.
+
+Namun komunikasi antar apliksi di dalam kubernetes sebenarnya tidak aman karena tidak ada enkripsi dan otorisasi antar pod.
+Karena itu bisa saja serangan Man in The Middle bisa terjadi, jika kubernetes kita kebobolan.
+
+##Pengenalan Istio
+Permasalahan-permalalahan diatas dapat kita selesaikan dengan menggunakan service mesh.
+Service mesh adalah dedicated layer yang mengatur komunikasi antar service dalam sistem terdistribusi seperti kubernetes.
+Istio merupakan salah satu tools open source untuk mengimplementasikan service mesh tersebut.
+
+##Sidecar
+Saat kita menggunakan istio akan ada satu container di dalam instance pod kita yang berperan sebagai proxy.
+Setiap komunikasi keluar masuk jaringan nantinya akan melewati proxy ini.
+Proxy tersebut dinamakan sidecar, dan proxy yang digunakan istio adalah Envoy.
+Sidecar proxy inilah yang nantinya akan menyelesaikan masalah-masalah diatas.

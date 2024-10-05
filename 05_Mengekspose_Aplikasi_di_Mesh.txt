@@ -1,0 +1,47 @@
+### MENGEKSPOSE APLIKASI DI MESH ###
+
+##Ingress gateway
+Ingress gateway merupakan gerbang untuk traffic dari luar jika ingin masuk ke service mesh di dalam cluster kubernetes.
+Agar ingress kubernetes dapat diakses dari luar cluster, dia menggunakan service dengan type LoadBalancer.
+Mungkin jika kita menggunakan kubernetes di local, 'EXTERNAL-IP' yang didapatkan adalah '<pending>'.
+Tidak apa-apa itu merupakan expected dari kubernetes dan tetap bisa digunakan untuk praktek nantinya.
+
+kubectl get svc -n istio-system
+
+##Setup Ingress Gateway (Service Dashboard)
+Untuk melakukan konfigurasi ingress gateway, nantinya kita akan menggunakan object bernama Gateway (https://istio.io/latest/docs/reference/config/networking/gateway/#Gateway).
+Sebagai contoh kita akan expose aplikasi dashboard service ke luar cluster dengan port 80 (HTTP).
+Jika kita implementasu di production, maka lebih baik menggunakan port 443 (HTTPS) dengan SSL.
+Gateway ini mendukung banyak sekali protokol seperti HTTP, HTTPS, GRPC, HTTP2, MONGO, TCP, TLS, dll.
+
+#Apply file yaml ingress gateway 
+kubctl apply -f 05_Mengekspose_Aplikasi_di_Mesh/dashboard-gateway.yaml
+
+#Check gateway
+kubectl get gateways
+
+##Setup domain local
+Apabila praktik istio ini menggunakan kubernetes di local, silahkan tambahkan domain local di file hostnya
+
+nano /etc/host 
+
+127.0.0.1 domain-test.local
+
+##Virtual Service (Service Dashboard)
+Virtual Service digunakan untuk mengarahkan traffic atau istilah kerenya traffic routing.
+Traffic routing yang dilakukan virtual service bisa sangat advance seperti layaknya reverse proxy.
+Nantinya kita akan coba beberapa fitur lanjutan dari virtual service ini di section lain.
+
+#Apply file yaml virtual service
+kubectl apply -f 05_Mengekspose_Aplikasi_di_Mesh/dashboard-external-virtualService.yaml
+
+#Check virtual service 
+kubectl get virtualservices
+kubectl get virtualservices.networking.istio.io
+
+##Mengakses Aplikasi Dashboard
+Untuk mengakses dashboard melalui gateway, caranya cukup mudah, kita dapat menggunakan port forwarding kubernetes.
+Karena gateway aplikasi kita berjalan dengan port 80, maka kita dapat mengunakan port lain yakni port 8080
+
+#Port forward service istio ingress gateway 
+kubectl port-forward -n istio-system svc/istio-ingressgateway 8080:80

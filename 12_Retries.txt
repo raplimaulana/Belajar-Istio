@@ -1,0 +1,6 @@
+### RETRIES ###
+Retries digunakan untuk mengulangi sebuah request ketika request tersebut gagal.
+Hal ini dapat meningkatkan availability dari service kita dengan memastikan sebuah request tidak sepenuhnya gagal karena mungkin masalah jaringan.
+Contohnya disini kita akan mengimplementasikan retries pada review service, yang dimana kita menggunakan review service versi 2.0.0 yang memiliki error HTTP 500.
+
+kubectl apply -f 12_Retries -R 

@@ -1,0 +1,7 @@
+### TRAFFIC MONITORING ###
+Terkadang ada kalanya kita perlu melakukan testing di environment production karena kita membutuhkan "real traffic" seperti canary deployment yang sudah kita pelajari.
+Traffic monitoring digunakan untuk menduplikasi sebuah request ke sebuah service. Biasanya ini untuk ke service dengan versi baru (mirip canary).
+Tujuannya adalah kita apat mengetahui apakah ada bug yang belum tercover di environment staging.
+Contohnya disini kita akan mirroring traffic untuk review service pada versi terbaru (v2).
+
+kubectl apply -f 14_Traffic_Monitoring/ -R 

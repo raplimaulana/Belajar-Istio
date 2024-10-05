@@ -1,0 +1,18 @@
+### SECURITY ###
+
+##Auto mTLS 
+Istio menggunakan Secure Production Identify Framework for Everyone (SPIFFE) untuk membuat identitas pada workload (pod).
+SPIFFE adalah sebuah framework atau aturan untuk membuat komunikasi antar service aman.
+Identitas yang dibuat oleh istio berupa x509 certificate yang akan diterapka bersama mTLS.
+Singkatnya secara default komunikasi di dalam service mesh akan terenkripsi.
+Ketika membuat pod di nampespace tanpa istio, semua data akan bisa terbaca ketika terjadi serangan man in the middle attack.
+
+##Peer Authentication
+Kita juga dapat melarang adanya request yang tidak berasal dari service mesh (pod dari namespace yang tidak terdapat istio).
+Untuk membuat peraturan seperti ini kita perlu membuat object yang bernama 'PeerAuthentication'.
+
+#Menerapkan mTLS Mode Strict 
+kubectl apply -f 08_Security/PeerAuthentication.yaml 
+
+pod-tanpa-istio > curl -i product.belajar-istio:8080/products
+curl: (56) Recv failure: Connection reset by peer 

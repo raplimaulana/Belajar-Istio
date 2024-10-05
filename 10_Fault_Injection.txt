@@ -1,0 +1,17 @@
+### FAULT INJECTION ###
+Fault injection merupakan metode test untuk mensimulasikan sebuah kesalahan atau error di dalam sebuah service mesh.
+Salah satu manfaatnya adalah kita dapat mengukur seberapa tahan aplikasi kita ketika kesalahan terjadi, untuk memastikan aplikasi yang sifatnya critical tetap berjalan.
+Ada dua tipe fault injection di dalam istio:
+1. Delays
+   Delay pada fault injection digunakan untuk meningkatkan network latency atau overload pada sebuah service (aplikasi).
+   Contohnya kita akan membuat respon dari review service menjadi delay selama 10 detik untuk 50% traffic.
+
+   kubectl apply -f 10_Fault_Injection/vs-fault-injection-delay.yaml
+
+
+2. Aborts
+   Abort pada fault injection digunakan untuk mengembalikan HTTP Error code pada suatu service.
+   Selain HTTP, Aborts juga dapat diimplementasikan pada gRPC status code.
+   Contohnya kita akan membuat 50% response dari review service mengembalikan error HTTP 500 (Internal server error).
+
+   kubectl apply -f 10_Fault_Injection/vs-fault-injection-abort.yaml   

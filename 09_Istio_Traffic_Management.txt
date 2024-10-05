@@ -1,0 +1,11 @@
+### ISTIO TRAFFIC MANAGEMENT ###
+Pada materi ini kita akan membahas beberapa fitur menarik yang ada di istio terkait dengan traffic management.
+Materi yang sudah kita bahas sebelumnya adalah:
+- Request Routing
+  Canary Deployment (sudah dibahas).
+
+- Traffic Shifting
+  Canary Deployment (sudah dibahas).
+
+- TCP Traffic Shifting
+  Mirip dengan traffic shifting, jadi tidak dibahas.

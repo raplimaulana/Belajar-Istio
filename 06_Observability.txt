@@ -1,0 +1,48 @@
+### OBSERVABILITY ###
+
+##Observability
+Observability adalah kemampuan untuk kita memahami dan mendiagnosis apa yang terjadi di suatu sistem dengan melihat keadaan.
+Untuk dapat memahami dan mendiagnosis kita membutuhkan sebuah metric. Metric ini bisa berupa log, tracing, metrics (cpu, memory, network) atau alert.
+Salah satu manfaat menggunakan istio adalah kita dapat menyediakan banyak metric agar kita dapat memahami atau memonitoring kondisi mesh traffic kita.
+Metric-metric tersebut dapat kita visualisasikan sehingga kita bisa paham kondisi dari service mesh.
+Untuk menangkap dan memvisualisasikan metric yang ada tentunya butuh aplikasi pihak ke-3 uang nantinya perlu kita install. 
+Aplikasi tersebut bisa kita sebut supporting component.
+
+##Install Supporting Component
+Saat kita menginstall istioctl, di dalam foldernya disediakan sample addons yang dapat kita pakai.
+Untuk menginsatall komponen tersebut, silahkan masuk ke dalam folder istioctl yang sebelumnya sudah kita download, lalu gunakan perintah kubectl apply -f samples/addons
+Template YAML dari komponen tersebut hanya bersifat demo dan tidak disarankan untuk digunakan pada production area.
+
+kubectl apply -f istio-1.17.2/samples/addons
+
+#Check control-plane supporting component
+kubectl get pod -n istio-system 
+
+NAME                READY
+grafana-xxx         1/1
+jaeger-xxx          1/1     
+kiali-xxx           1/1
+promotheus-xxx      1/1
+
+##Generate Traffic (Script for Testing)
+Sebelum kita melihat metric, silahkan melakukan generate traffic terlebih dahulu untuk simulasi akses menggunakan file generateTraffic.sh
+
+/bin/bash generateTraffic.sh
+
+##Kiali Dashboard 
+Kiali merupakan ibservability untuk istio dengan kemampuan validasi konfigurasi service mesh.
+Cara mengaksesnya menggunakan 'istioctl dashboard kiali'.
+
+istioctl dashboard kiali
+
+##Grafana Dashboard
+Grafana digunakan untuk melakukan visualisasi data dari prometheus yang dimana prometheus digunakan untuk mengambil metric dari suatu resource dan menyimpannya.
+Selain itu grafana bisa kita setup alert untuk memberi tahu jika suatu metric sesuai dengan match kondisi rule kita.
+
+istioctl dashboard grafana
+
+##Jaeger Dashboard 
+Jaeger merupakan distributed tracing yang berfungsi untuk melakukan monitoring dan mencari letak kesalahan atau error pada saat komunikasi antar aplikasi.
+
+istioctl dashboard jaeger
+

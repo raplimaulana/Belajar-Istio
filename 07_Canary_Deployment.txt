@@ -1,0 +1,61 @@
+### Canary Deployment ###
+
+##Permasalahan Tanpa Menggunakan Canary Deployment 
+Saat kita ingin mendeploy aplikasi dengan versi terbaru, tentunya biasanya kita mengupdate tag pada image di object deployment kita.
+Saat kita melakukan hal tersebut, tentu saja semua traffic akan diarahkan ke pod dengan versi terbaru setelah deployment sukse dilakukan.
+Hal itu adalah sebuah masalah, kaena kita belum tahu apakah versi terbaru sudah benar-benar stabil tanpa error atau bug. Meskipun mungkin saja sudah dilakukan test oleh QA Engineer.
+
+Untuk mensimulasikan permasalahan seperti yang dijelaskan sebelumnya, kita akan mendeploy versi 2.0.0 dari service review.
+Setelah kita mendeploy versi 2.0.0 dari service review, kita akan melihat error saat mengakses menu review paa aplikasi kita.
+Silahkan kembali rollback ke versi 1.0.0 setelah ini.
+
+kubectl apply -f 07_Canary_Deployment/review-2.0.0.yaml
+
+##Canary Deployment 
+Untuk mengatasi masalah tersebut, salah satunya kita bisa menggunakan metode deployment yang bernama canary deployment.
+Simplenya canary deployment adalah memberikan sedikit trafic ke versi terbaru.
+Dari situ nanti kita akan melakukan monitoring apakah di versi terbaru ada masalah atau tidak.
+
+#Destination Rule (Service Review)
+Pertanyaannya bagaimana kita mengarahkan sedikit traffic ke versi aplikasu yang baru?
+Untuk melakukan hal tersebut (canary deployment), kita perlu membuat object 'DestinationRule' terlebih dahulu untuk service review.
+DestinationRule merupakan tempat kita mendefinisikan sebuah aturan tentang behavior sebuah traffic dari suatu service (aplikasi).
+Ada banyak sekali sebenarnya manfaat dari DestionationRule, namun untuk keperluan belajar, kali ini kita akan memanfaatkan subsets untuk melakukan canary deployment.
+Subsets merupakan endpoint dari suatu service (aplikasi) dan biasanya digunakan untuk A/B testing atau canary deployment.
+
+kubectl apply -f 07_Canary_Deployment/review-destinationRule-1-vs-2.yaml
+kubectl get destinationrules.networking.istio.istio
+
+#Virtual Service (Service Review)
+Setelah kita melakukan setup Destination Rule, selanjutnya kita perlu membuat virtual service khusus untuk service review.
+Seperti yang kita bahas sebelumnya, virtual service ini digunakan untuk traffic routing.
+
+kubectl apply -f 07_Canary_Deployment/review-virtualService-1-vs-2.yaml 
+kubectl get virtualservices.networking.istio.io 
+
+#Deploy Service Review versi 2.0.0 canary
+Setelah membuat VirtualService dan DestinationRule khusus untuk service review. Selanjutnya tentu saja kita perlu mendeploy kembali service review yang sama dengan versi 2.0.0.
+
+kubectl apply -f 07_Canary_Deployment/review-2.0.0-canary.yaml
+kubectl get deployments.apps 
+
+#Cek hasil Canary Deployment 
+Sekarang jika kita lihat di kiali dashboard, akan muncul topology traffic canary deployment yang sudah kita implementasikan.
+Jika ada error silahkan kembalikan ke traffic versi 1.0.0
+
+kubectl apply -f 07_Canary_Deployment/review-virtualService-to-v1.yaml
+
+#Canary Deployment (Hotfix Service Review 3.0.0)
+Ketika kita mengetahui adanya error di aplikasi, tentunya tim engineer dan QA akan menciba memperbaiki bug yang ditemukan (hotfix).
+Mari kita simulasikan service review yang sudah diperbaiki dan siap untuk di deploy dengan versi baru (3.0.0).
+
+kubectl delete -f 07_Canary_Deployment/review-2.0.0-canary.yaml
+
+kubectl apply -f 07_Canary_Deployment/review-3.0.0-canary.yaml
+kubectl apply -f 07_Canary_Deployment/review-destinationRule-1-vs-3.yaml
+kubectl apply -f 07_Canary_Deployment/review-virtualService-1-vs-3.yaml
+
+##Wrap up
+Jika kita mengetahui tidak adanya error di versi terbaru (hotfix 3.0.0), maka kita bisa dengan yakin mengarahkan 100% traffic ke versi terbaru tersebut.
+
+kubectl apply -f 07_Canary_Deployment/review-virtualService-to-v3.yaml

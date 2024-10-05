@@ -1,0 +1,8 @@
+### REQUEST TIMEOUT ###
+Timouts digunakan untuk menentukan waktu tunggu sebuah service.
+Hal ini umum digunakan karena timeout yang terlalu lama berpotensi meningkatkan latency yang berlebihan, sedangkan timeout yang terlalu kecil berpotensi error pemanggilan.
+Contohnya kita kita akan membuat timeout di dashboard 1 detik dan response dari review delay 3 detik.
+Karena aplikasi dashboard adalah SSR, maka error akan muncul sesuai test case kita.
+
+kubectl apply -f 11_Request_Timeout -R 
+

@@ -1,0 +1,28 @@
+### ACCESSING EXTERNAL SERVICES ###
+Saat kita menginstall istio, secara default konfigurasi dari OutboundTrafficPolicy.Mode, valuenya adalah ALLOW_ANY (https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/#MeshConfig-OutboundTrafficPolicy-Mode). 
+Yang berarti semua traffic keluar ke tujuan yang tidak diketahui (seperti internet) akan diizinkan. 
+Bisa di cek menggunakan check-TrafficPolicy.sh.
+
+Ada kalanya kita perlu mengontrol traffic keluar dari service mesh.
+Silahkan gunakan file sleep-deployment.yaml untuk mendeploy environment praktek kita.
+Setelah itu kita buktikan dahulu bahwa dari pod dapat berkomunikasi ke luar seperti google.com dengan menggunakan file do-request.sh
+
+kubectl apply -f 18_Accessing_External_Services/sleep-deployment.yaml
+/bin/bash 18_Accessing_External_Services/do-request.sh google.com
+
+##Registry Only 
+Setelah berhasil, kita akan mencoba merubah agar service kita menggunakan mode REGISTRY_ONLY yang akan memblock semua traffic yang keluar dari mesh (seperti google.com, facebook.com, dll).
+Gunakan file set-istio-mode.sh untuk melakukan konfigurasi tersebut.
+Lalu test menggunakan do-request.sh untuk melihat apakah sekarang requestnya di block atau tidak.
+
+/bin/bash 18_Accessing_External_Services/set-istio-mode.sh
+/bin/bash 18_Accessing_External_Services/do-request.sh google.com
+
+Untuk mengizinkan situs mana saja yang boleh diakses, kita perlu membuat object istio ServiceEntry.
+Singkatnya ServiceEntry digunakan untuk mendefinisikan bagaimana sebuah traffic itu diarahkan. Entah itu di dalam ataupun di luar service mesh.
+Selanjutnya kita apply file serviceEntry-google.yaml untuk mengizinkan web google.com diakses.
+
+kubectl apply -f 18_Accessing_External_Services/serviceEntry-google.yaml
+/bin/bash 18_Accessing_External_Services/do-request.sh google.com
+
+

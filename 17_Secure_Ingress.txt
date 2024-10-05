@@ -1,0 +1,14 @@
+### SECURE INGRESS ###
+Saat kita mengekspose sebuah service keluar cluster, umumnya kita menggunakan ingress gateway.
+Tentu saja agar traffic antara user dengan istio aman, kita membutuhkan enkripsi (TLS/HTTPS).
+
+kubectl apply -f 17_Secure_Ingress/ -R
+
+##AWS Network Load Balancer (NLB)
+Jika kita menggunakan EKS di AWS, kita harus mengubah service ingress gateway istio dari Classic Load Balancer menjadi Network Load Balancer (NLB).
+Ada cara lain juga yaitu mengkombinasikan Apllication Load Balancer (ALB) dengan ingress gateway istio https://aws.amazon.com/id/blogs/containers/secure-end-to-end-traffic-on-amazon-eks-using-tls-certificate-in-acm-alb-and-istio/.
+Namun lebih disarankan untuk menggunakan NLB karena lebih mudah untuk diimplementasikan.
+
+helm repo add istio https://istio-release.storage.googleapis.com/charts                                     
+helm repo update
+helm upgrade --install istio-ingressgateway-second istio/gateway -f values-ingressGateway.yaml -n istio-system

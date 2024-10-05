@@ -1,0 +1,9 @@
+### ARSITEKTUR ISTIO ###
+
+##Arsitektur Istio
+Istio memiliki dua komponen, yakni control plane dan data plane.
+1. Control plane
+   Berperan sebagai controller dari sidecar dan meng-generate konfigurasi envoy.
+
+2. Data plane
+   Pod yang memiliki sidecar proxy.

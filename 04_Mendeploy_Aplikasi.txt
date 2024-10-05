@@ -1,0 +1,21 @@
+### MENDEPLOY APLIKASI ###
+Silahkan memmbuat namespace baru dengan nama belajar-istio dan mendeploy aplikasi menggunakan file dashboard-1.0.0.yaml, product-1.0.0.yaml dan review-1.0.0.yaml.
+Untuk mengecek apakah aplikasi sudah berjalan normal, silahkan melakukan port-forwarding untuk dashboard service.
+
+kubectl create namespace belajar-istio
+kubectl get namespaces
+kubectl apply -f '04_Mendeploy_Aplikasi/*1.0.0.yaml'
+kubectl port-forward svc/dashboard 3000
+
+##Sidecar Injection
+Jika kita perhatikan dengan 'kubectl get pod', jumlah container yang berjalan adalah 1/1 yang berarti sidecar proxy kita belum ada disitu.
+Untuk membuat istio otomatis membuat sidecar di pod, kita perlu menambahkan label 'istio-injection: enabled' di namespace pod yang digunakan.
+
+#Enable Istio Injection on Namespace
+kubectl label namespace belajar-istio istio-injection=enabled
+
+#Check Label Namespace 
+kubectl describe namespace belajar-istio 
+
+#Restart Deployment
+kubectl rollout restart deployment dashboard product review

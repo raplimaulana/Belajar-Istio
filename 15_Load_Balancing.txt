@@ -1,0 +1,6 @@
+### LOAD BALANCING ###
+Saat kita menggunakan object service di kubernetes, pada dasarnya cara kerjanya adalah membagi beban menggunakan algoritme round robin ke beberapa pod.
+Istio memiliki beberapa algoritme untuk kasus load balancing ini. 
+Yang dimana setiap algoritme penggunaannya sesuai untuk kasus tertentu https://istio.io/latest/docs/reference/config/networking/destination-rule/#LoadBalancerSettings-SimpleLB.
+
+kubectl apply -f 15_Load_Balancing/ -R

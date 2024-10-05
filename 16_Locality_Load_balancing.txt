@@ -1,0 +1,20 @@
+### LOCALITY LOAD BALANCING ###
+Untuk mendapatkan high availability pada kubernetes, tentu saja kita perlu memiliki cluster yang nodenya tersebar ke beberapa Availibility Zone (AZ).
+Bahkan di kasus tertentu kita membutuhkan beberapa cluster di region yang berbeda.
+Kita dapat membuat service mesh istio untuk multiple kubernetes cluster, yang akan kita pelajari di materi lain secara terpisah.
+Dengan kita memiliki node di beberapa zone dan beberapa cluster, tentunya akan ada beberapa permasalahan yang mungkin terjadi. 
+Contohnya adalah bagaimana menerapkan failover antar region.
+
+Katakanlah AZ-2 dan AZ-3 dari kubernetes cluster di AWS sedang kejatuhan meteor. 
+Untuk melayani client yang di serve oleh AWS, idealnya membutuhkan 75 pods (1 node 25 pods). 
+Disisi lain instance AZ-1 jumlahnya terbatas atau bahkan sold-out.
+Dengan kondisi seperti ini beban yang di terima node yang masih aktif di AWS sangat besar.
+
+Dari sini kita ingin membagi beban traffic 25% ke AWS dan 75% ke GCP.
+Dengan menggunakan istio, fitur untuk melakukan hal itu disebut locality load balancing.
+Locality load balancing akan membaca label topology.kubernetes.io/region dan topology.kubernetes.io/zone.
+https://kubernetes.io/docs/reference/labels-annotations-taints/#topologykubernetesioregion.
+https://kubernetes.io/docs/reference/labels-annotations-taints/#topologykubernetesiozone.
+
+kubectl apply -f 16_Locality_Load_balancing/ -R
+
